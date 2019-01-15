@@ -22,7 +22,7 @@ class ServerListener {
         }
 
         try (ServerSocket server = new ServerSocket(Integer.parseInt(prop.getProperty("server.port")), 0, InetAddress.getByName(prop.getProperty("server.address")))) {
-            System.out.println("server is started");
+            System.out.println("Server started");
             while (!server.isClosed()) {
                 clientExecutors.execute(new ClientHandler(server.accept()));
             }

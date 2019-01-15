@@ -68,9 +68,12 @@ public class ClientHandler implements Runnable {
                         }
                         break;
                     case "delete":
-                        System.out.println("Server try writing to channel");
-                        out.writeUTF("Server reply - " + new Gson().toJson(repository.delete(request.getDictionary())) + " - OK");
-                        out.flush();
+                        try {
+                            result = new Gson().toJson(repository.delete(request.getDictionary()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            result = e.getMessage();
+                        }
                         break;
                     default:
                         out.writeUTF("Server reply - incorrect command - OK");

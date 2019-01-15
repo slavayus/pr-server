@@ -77,9 +77,17 @@ public class DictionaryRepository {
     }
 
     public Dictionary delete(Dictionary record) {
-        record = new Dictionary();
-        record.setWord("delete");
-        record.setDescription("Deleting the record");
-        return record;
+        if (record == null || record.getWord() == null) {
+            throw new IllegalArgumentException("Searching word must not be null");
+        }
+
+        try (Session session = HibernateUtil.getSession()) {
+            session.beginTransaction();
+            Query query = session.createQuery("DELETE FROM DictionaryEntity WHERE word = :word");
+            query.setParameter("word", record.getWord());
+            query.executeUpdate();
+            session.getTransaction().commit();
+            return record;
+        }
     }
 }
