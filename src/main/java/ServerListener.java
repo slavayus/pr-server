@@ -4,10 +4,14 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 class ServerListener {
     private static final String PROP_FILE_NAME = "server.properties";
     private Properties prop;
+
+    private static final ExecutorService clientExecutors = Executors.newFixedThreadPool(10);
 
     void connect() {
         try {
@@ -17,9 +21,11 @@ class ServerListener {
             return;
         }
 
-        try {
-            ServerSocket server = new ServerSocket(Integer.parseInt(prop.getProperty("server.port")), 0, InetAddress.getByName(prop.getProperty("server.address")));
+        try (ServerSocket server = new ServerSocket(Integer.parseInt(prop.getProperty("server.port")), 0, InetAddress.getByName(prop.getProperty("server.address")))) {
             System.out.println("server is started");
+            while (!server.isClosed()) {
+                clientExecutors.execute(new ClientHandler(server.accept()));
+            }
         } catch (Exception e) {
             System.out.println("init error: " + e);
         }
