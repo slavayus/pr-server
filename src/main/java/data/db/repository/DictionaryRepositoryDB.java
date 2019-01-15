@@ -59,6 +59,7 @@ public class DictionaryRepositoryDB implements DictionaryRepository {
             session.beginTransaction();
             session.save(entity);
             session.getTransaction().commit();
+            record.setId(entity.getId());
             return record;
         }
     }
