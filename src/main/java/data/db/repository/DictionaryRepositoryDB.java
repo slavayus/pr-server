@@ -23,7 +23,7 @@ public class DictionaryRepositoryDB implements DictionaryRepository {
             DictionaryEntity singleResult = (DictionaryEntity) query.getSingleResult();
             session.getTransaction().commit();
 
-            return new Dictionary(singleResult.getWord(), singleResult.getDescription());
+            return new Dictionary(singleResult.getId(), singleResult.getWord(), singleResult.getDescription());
         }
     }
 

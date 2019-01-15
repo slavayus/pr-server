@@ -13,6 +13,12 @@ public class Dictionary {
         this.description = description;
     }
 
+    public Dictionary(int id, String word, String description) {
+        this.id = id;
+        this.word = word;
+        this.description = description;
+    }
+
     public int getId() {
         return id;
     }

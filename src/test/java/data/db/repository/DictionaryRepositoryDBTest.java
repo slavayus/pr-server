@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import util.HibernateUtil;
 
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
 public class DictionaryRepositoryDBTest {
@@ -20,6 +21,13 @@ public class DictionaryRepositoryDBTest {
     public void init() {
         repository = new DictionaryRepositoryDB();
         session = HibernateUtil.getSession();
+        clearDictionaryEntity();
+    }
+
+    private void clearDictionaryEntity() {
+        session.beginTransaction();
+        session.createQuery("DELETE FROM DictionaryEntity ").executeUpdate();
+        session.getTransaction().commit();
     }
 
     @After
@@ -27,8 +35,41 @@ public class DictionaryRepositoryDBTest {
         session.close();
     }
 
+    @Test(expected = NoResultException.class)
+    public void selectMissingRecord() {
+        Dictionary dictionary = new Dictionary();
+        dictionary.setWord("YYEE");
+        dictionary.setDescription("YYEE");
+        repository.select(dictionary);
+    }
+
     @Test
     public void select() {
+        DictionaryEntity dictionaryEntity = new DictionaryEntity();
+        dictionaryEntity.setWord("YYEE");
+        dictionaryEntity.setDescription("YYEE");
+        session.beginTransaction();
+        session.save(dictionaryEntity);
+        session.getTransaction().commit();
+        Dictionary select = repository.select(new Dictionary(dictionaryEntity.getWord(), dictionaryEntity.getDescription()));
+
+        Assert.assertEquals("YYEE", select.getWord());
+        Assert.assertEquals("YYEE", select.getDescription());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void selectNullAll() {
+        repository.select(new Dictionary(null, null));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void selectNullWord() {
+        repository.select(new Dictionary(null, "SYF"));
+    }
+
+    @Test(expected = NoResultException.class)
+    public void selectNullDescription() {
+        repository.select(new Dictionary("YEE", null));
     }
 
     @Test
