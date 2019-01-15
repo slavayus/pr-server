@@ -76,8 +76,7 @@ public class ClientHandler implements Runnable {
                         }
                         break;
                     default:
-                        out.writeUTF("Server reply - incorrect command - OK");
-                        out.flush();
+                        result = "Incorrect command";
                 }
                 System.out.println("Server try writing to channel");
                 out.writeUTF(result);
