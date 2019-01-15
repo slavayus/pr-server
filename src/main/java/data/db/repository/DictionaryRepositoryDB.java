@@ -10,6 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DictionaryRepositoryDB implements DictionaryRepository {
+    /**
+     * Select record in db by word.
+     *
+     * @param record word for searching.
+     * @return Selected record from db.
+     */
     @Override
     public Dictionary select(Dictionary record) {
         if (record == null || record.getWord() == null) {
@@ -27,6 +33,12 @@ public class DictionaryRepositoryDB implements DictionaryRepository {
         }
     }
 
+    /**
+     * Searching words in db according by mask.
+     *
+     * @param record mask for searching.
+     * @return Found list of records.
+     */
     @Override
     public List<Dictionary> find(Dictionary record) {
         if (record == null || record.getWord() == null) {
@@ -46,6 +58,12 @@ public class DictionaryRepositoryDB implements DictionaryRepository {
         }
     }
 
+    /**
+     * Insert record to db.
+     *
+     * @param record @see Dictionary with not null word and description .
+     * @return Inserted record to db with id.
+     */
     @Override
     public Dictionary insert(Dictionary record) {
         if (record == null || record.getWord() == null || record.getDescription() == null) {
@@ -64,6 +82,12 @@ public class DictionaryRepositoryDB implements DictionaryRepository {
         }
     }
 
+    /**
+     * Update record in db.
+     *
+     * @param record @see Dictionary with not null word and description .
+     * @return Updated record in db.
+     */
     @Override
     public Dictionary update(Dictionary record) {
         if (record == null || record.getWord() == null || record.getDescription() == null) {
@@ -81,6 +105,12 @@ public class DictionaryRepositoryDB implements DictionaryRepository {
         }
     }
 
+    /**
+     * Delete record from db.
+     *
+     * @param record @see Dictionary with not null word.
+     * @return Deleted record to db with id.
+     */
     @Override
     public Dictionary delete(Dictionary record) {
         if (record == null || record.getWord() == null) {

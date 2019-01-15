@@ -14,6 +14,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import java.util.List;
 
+/**
+ * Testing DictionaryRepositoryDB class.
+ * Each test is isolated.
+ * ATTENTION: Test clear all entities in Dictionary table. If you want to save data, please change configuration for use test db or make backup of db.
+ */
 public class DictionaryRepositoryDBTest {
 
     private Session session;
