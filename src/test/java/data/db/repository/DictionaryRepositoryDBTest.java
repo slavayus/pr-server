@@ -266,8 +266,78 @@ public class DictionaryRepositoryDBTest {
         repository.update(null);
     }
 
-    @Test
-    public void delete() {
+    @Test(expected = NoResultException.class)
+    public void deleteExistingRecord() {
+        DictionaryEntity dictionaryEntity = new DictionaryEntity();
+        dictionaryEntity.setWord("YYEE");
+        dictionaryEntity.setDescription("YYEE");
+        session.beginTransaction();
+        session.save(dictionaryEntity);
+        session.getTransaction().commit();
+
+        repository.delete(new Dictionary("YYEE", "YYEE"));
+
+        session.beginTransaction();
+        Query query = session.createQuery("FROM DictionaryEntity E WHERE E.word = :word");
+        query.setParameter("word", "YYEE");
+        query.getSingleResult();
+        session.getTransaction().commit();
     }
 
+    @Test(expected = NoResultException.class)
+    public void deleteMissingRecord() {
+        repository.delete(new Dictionary("YYEE", "YYEE"));
+
+        session.beginTransaction();
+        Query query = session.createQuery("FROM DictionaryEntity E WHERE E.word = :word");
+        query.setParameter("word", "YYEE");
+        query.getSingleResult();
+        session.getTransaction().commit();
+    }
+
+    @Test
+    public void deleteRecordTwice() {
+        DictionaryEntity dictionaryEntity = new DictionaryEntity();
+        dictionaryEntity.setWord("YYEE");
+        dictionaryEntity.setDescription("YYEE");
+        session.beginTransaction();
+        session.save(dictionaryEntity);
+        session.getTransaction().commit();
+
+        repository.delete(new Dictionary("YYEE", "YYEE"));
+        repository.delete(new Dictionary("YYEE", "YYEE"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteWordNull() {
+        repository.delete(new Dictionary(null, "YYEE"));
+    }
+
+    @Test(expected = NoResultException.class)
+    public void deleteDescriptionNull() {
+        DictionaryEntity dictionaryEntity = new DictionaryEntity();
+        dictionaryEntity.setWord("YYEE");
+        dictionaryEntity.setDescription("YYEE");
+        session.beginTransaction();
+        session.save(dictionaryEntity);
+        session.getTransaction().commit();
+
+        repository.delete(new Dictionary("YYEE", null));
+
+        session.beginTransaction();
+        Query query = session.createQuery("FROM DictionaryEntity E WHERE E.word = :word");
+        query.setParameter("word", "YYEE");
+        query.getSingleResult();
+        session.getTransaction().commit();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteAllNull() {
+        repository.delete(new Dictionary(null, null));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteDictionaryNull() {
+        repository.delete(null);
+    }
 }
