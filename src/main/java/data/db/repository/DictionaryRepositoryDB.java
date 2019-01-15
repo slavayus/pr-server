@@ -41,7 +41,7 @@ public class DictionaryRepositoryDB implements DictionaryRepository {
             session.getTransaction().commit();
 
             ArrayList<Dictionary> dictionaryList = new ArrayList<>();
-            result.forEach(dictionaryEntity -> dictionaryList.add(new Dictionary(dictionaryEntity.getWord(), dictionaryEntity.getDescription())));
+            result.forEach(dictionaryEntity -> dictionaryList.add(new Dictionary(dictionaryEntity.getId(), dictionaryEntity.getWord(), dictionaryEntity.getDescription())));
             return dictionaryList;
         }
     }
