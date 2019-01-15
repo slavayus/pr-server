@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import data.db.repository.DictionaryRepository;
 import data.db.repository.DictionaryRepositoryDB;
 import data.tcp.model.Request;
 
@@ -10,7 +11,7 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     private final Socket client;
-    private final DictionaryRepositoryDB repository;
+    private final DictionaryRepository repository;
 
     ClientHandler(Socket client) {
         this.client = client;
