@@ -8,9 +8,9 @@
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="connection.username">spin5</property>
         <property name="connection.password">spin5</property>
+        <!-- DB schema will be updated if needed -->
+        <property name="hbm2ddl.auto">update</property>
 
         <mapping class="data.db.entity.DictionaryEntity"/>
-        <!-- DB schema will be updated if needed -->
-        <!-- <property name="hbm2ddl.auto">update</property> -->
     </session-factory>
 </hibernate-configuration>

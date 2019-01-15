@@ -45,10 +45,19 @@ public class DictionaryRepository {
     }
 
     public Dictionary insert(Dictionary record) {
-        record = new Dictionary();
-        record.setWord("inser");
-        record.setDescription("Inserting new record");
-        return record;
+        if (record == null || record.getWord() == null || record.getDescription() == null) {
+            throw new IllegalArgumentException("Searching word must not be null");
+        }
+
+        DictionaryEntity entity = new DictionaryEntity();
+        entity.setWord(record.getWord());
+        entity.setDescription(record.getDescription());
+        try (Session session = HibernateUtil.getSession()) {
+            session.beginTransaction();
+            session.save(entity);
+            session.getTransaction().commit();
+            return record;
+        }
     }
 
     public Dictionary update(Dictionary record) {
