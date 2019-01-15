@@ -74,6 +74,11 @@ public class DictionaryRepositoryDBTest {
         repository.select(new Dictionary("YEE", null));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void selectNullDictionary() {
+        repository.select(null);
+    }
+
     @Test
     public void findManyRecord() {
         DictionaryEntity dictionaryEntity = new DictionaryEntity();
@@ -138,6 +143,11 @@ public class DictionaryRepositoryDBTest {
         repository.find(new Dictionary());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void findNullDictionary() {
+        repository.find(null);
+    }
+
     @Test
     public void insertOnce() {
         Dictionary dictionary = new Dictionary();
@@ -178,6 +188,11 @@ public class DictionaryRepositoryDBTest {
         Dictionary dictionary = new Dictionary();
         dictionary.setWord("YEYE");
         repository.insert(dictionary);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void insertNullDictionary() {
+        repository.insert(null);
     }
 
     @Test
@@ -244,6 +259,11 @@ public class DictionaryRepositoryDBTest {
     @Test(expected = IllegalArgumentException.class)
     public void updateNullAll() {
         repository.update(new Dictionary(null, null));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void updateNullDictionary() {
+        repository.update(null);
     }
 
     @Test
