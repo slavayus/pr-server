@@ -61,10 +61,19 @@ public class DictionaryRepository {
     }
 
     public Dictionary update(Dictionary record) {
-        record = new Dictionary();
-        record.setWord("update");
-        record.setDescription("Updating the record");
-        return record;
+        if (record == null || record.getWord() == null || record.getDescription() == null) {
+            throw new IllegalArgumentException("Searching word must not be null");
+        }
+
+        try (Session session = HibernateUtil.getSession()) {
+            session.beginTransaction();
+            Query query = session.createQuery("UPDATE DictionaryEntity SET description = :description WHERE word = :word");
+            query.setParameter("word", record.getWord());
+            query.setParameter("description", record.getDescription());
+            query.executeUpdate();
+            session.getTransaction().commit();
+            return record;
+        }
     }
 
     public Dictionary delete(Dictionary record) {
