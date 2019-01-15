@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import data.db.repository.DictionaryRepository;
 import data.tcp.model.Request;
 
+import javax.persistence.NoResultException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -30,13 +31,17 @@ public class ClientHandler implements Runnable {
                 Request request = new Gson().fromJson(entry, Request.class);
                 System.out.println("READ from clientDialog message - " + entry);
 
+                String result = "Empty result";
                 switch (request.getCommand()) {
                     case "quit":
                         break loop;
                     case "select":
-                        System.out.println("Server try writing to channel");
-                        out.writeUTF("Server reply - " + new Gson().toJson(repository.select(request.getDictionary())) + " - OK");
-                        out.flush();
+                        try {
+                            result = new Gson().toJson(repository.select(request.getDictionary()));
+                        } catch (IllegalArgumentException | NoResultException e) {
+                            e.printStackTrace();
+                            result = e.getMessage();
+                        }
                         break;
                     case "find":
                         System.out.println("Server try writing to channel");
@@ -62,7 +67,9 @@ public class ClientHandler implements Runnable {
                         out.writeUTF("Server reply - incorrect command - OK");
                         out.flush();
                 }
-
+                System.out.println("Server try writing to channel");
+                out.writeUTF(result);
+                out.flush();
             }
             client.close();
 
