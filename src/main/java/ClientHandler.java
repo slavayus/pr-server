@@ -1,3 +1,6 @@
+import com.google.gson.Gson;
+import data.tcp.model.Request;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,14 +23,15 @@ public class ClientHandler implements Runnable {
             while (!client.isClosed()) {
                 System.out.println("Server reading from channel");
                 String entry = in.readUTF();
+                Request request = new Gson().fromJson(entry, Request.class);
                 System.out.println("READ from clientDialog message - " + entry);
 
-                if (entry.equalsIgnoreCase("quit")) {
+                if (request.getCommand().equalsIgnoreCase("quit")) {
                     break;
                 }
 
                 System.out.println("Server try writing to channel");
-                out.writeUTF("Server reply - " + entry + " - OK");
+                out.writeUTF("Server reply - " + new Gson().toJson(request) + " - OK");
                 out.flush();
             }
             client.close();
