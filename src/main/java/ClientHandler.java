@@ -1,5 +1,5 @@
 import com.google.gson.Gson;
-import data.db.repository.DictionaryRepository;
+import data.db.repository.DictionaryRepositoryDB;
 import data.tcp.model.Request;
 
 import javax.persistence.NoResultException;
@@ -10,11 +10,11 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     private final Socket client;
-    private final DictionaryRepository repository;
+    private final DictionaryRepositoryDB repository;
 
     ClientHandler(Socket client) {
         this.client = client;
-        repository = new DictionaryRepository();
+        repository = new DictionaryRepositoryDB();
     }
 
     @Override
