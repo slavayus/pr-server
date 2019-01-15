@@ -11,6 +11,7 @@ import util.HibernateUtil;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
+import java.util.List;
 
 public class DictionaryRepositoryDBTest {
 
@@ -73,7 +74,67 @@ public class DictionaryRepositoryDBTest {
     }
 
     @Test
-    public void find() {
+    public void findManyRecord() {
+        DictionaryEntity dictionaryEntity = new DictionaryEntity();
+        dictionaryEntity.setWord("YYEE");
+        dictionaryEntity.setDescription("YYEE");
+        session.beginTransaction();
+        session.save(dictionaryEntity);
+        session.getTransaction().commit();
+        dictionaryEntity = new DictionaryEntity();
+        dictionaryEntity.setWord("YYYE");
+        dictionaryEntity.setDescription("YYEE");
+        session.beginTransaction();
+        session.save(dictionaryEntity);
+        session.getTransaction().commit();
+        List<Dictionary> dictionaries = repository.find(new Dictionary("Y", null));
+
+        Assert.assertEquals(2, dictionaries.size());
+        Assert.assertEquals("YYEE", dictionaries.get(0).getWord());
+        Assert.assertEquals("YYEE", dictionaries.get(0).getDescription());
+        Assert.assertEquals("YYYE", dictionaries.get(1).getWord());
+        Assert.assertEquals("YYEE", dictionaries.get(1).getDescription());
+    }
+
+    @Test
+    public void findOneRecord() {
+        DictionaryEntity dictionaryEntity = new DictionaryEntity();
+        dictionaryEntity.setWord("YYEE");
+        dictionaryEntity.setDescription("YYEE");
+        session.beginTransaction();
+        session.save(dictionaryEntity);
+        session.getTransaction().commit();
+        List<Dictionary> dictionaries = repository.find(new Dictionary("Y", null));
+
+        Assert.assertEquals(1, dictionaries.size());
+        Assert.assertEquals("YYEE", dictionaries.get(0).getWord());
+        Assert.assertEquals("YYEE", dictionaries.get(0).getDescription());
+    }
+
+    @Test
+    public void findEmptyList() {
+        List<Dictionary> dictionaries = repository.find(new Dictionary("Y", null));
+        Assert.assertEquals(0, dictionaries.size());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findNullWord() {
+        Dictionary dictionary = new Dictionary();
+        dictionary.setDescription("EEE");
+        repository.find(dictionary);
+    }
+
+    @Test
+    public void findNullDescription() {
+        Dictionary dictionary = new Dictionary();
+        dictionary.setWord("EEE");
+        List<Dictionary> dictionaries = repository.find(dictionary);
+        Assert.assertEquals(0, dictionaries.size());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findNullAll() {
+        repository.find(new Dictionary());
     }
 
     @Test
