@@ -4,6 +4,14 @@ public class Dictionary {
     private String word;
     private String description;
 
+    public Dictionary() {
+    }
+
+    public Dictionary(String word, String description) {
+        this.word = word;
+        this.description = description;
+    }
+
     public String getWord() {
         return word;
     }

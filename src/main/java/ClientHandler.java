@@ -32,7 +32,7 @@ public class ClientHandler implements Runnable {
                 System.out.println("READ from clientDialog message - " + entry);
 
                 String result = "Empty result";
-                switch (request.getCommand()) {
+                switch (request.getCommand().toLowerCase()) {
                     case "quit":
                         break loop;
                     case "select":
@@ -44,9 +44,12 @@ public class ClientHandler implements Runnable {
                         }
                         break;
                     case "find":
-                        System.out.println("Server try writing to channel");
-                        out.writeUTF("Server reply - " + new Gson().toJson(repository.find(request.getDictionary())) + " - OK");
-                        out.flush();
+                        try {
+                            result = new Gson().toJson(repository.find(request.getDictionary()));
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                            result = e.getMessage();
+                        }
                         break;
                     case "insert":
                         System.out.println("Server try writing to channel");
